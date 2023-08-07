@@ -62,17 +62,12 @@ public class ValidationItemControllerV4 {
             return "validation/v4/addForm";
         }
 
-        Item item = new Item();
-        item.setItemName(form.getItemName());
-        item.setPrice(form.getPrice());
-        item.setQuantity(form.getQuantity());
+        Item savedItem = itemRepository.save(convertItemSaveFormObject(form));
 
-        Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/validation/v4/items/{itemId}";
     }
-
 
 
 
@@ -99,15 +94,26 @@ public class ValidationItemControllerV4 {
             return "validation/v4/editForm";
         }
 
+        itemRepository.update(itemId, convertItemUpdateFormObject(form));
+
+        return "redirect:/validation/v4/items/{itemId}";
+    }
+
+    private Item convertItemSaveFormObject(ItemSaveForm form) {
         Item item = new Item();
         item.setItemName(form.getItemName());
         item.setPrice(form.getPrice());
         item.setQuantity(form.getQuantity());
-
-        itemRepository.update(itemId, item);
-        return "redirect:/validation/v4/items/{itemId}";
+        return item;
     }
 
+    private Item convertItemUpdateFormObject(ItemUpdateForm form) {
+        Item item = new Item();
+        item.setItemName(form.getItemName());
+        item.setPrice(form.getPrice());
+        item.setQuantity(form.getQuantity());
+        return item;
+    }
 
 }
 
